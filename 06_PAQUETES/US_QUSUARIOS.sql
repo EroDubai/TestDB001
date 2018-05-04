@@ -51,6 +51,15 @@ create or replace PACKAGE    US_QUSUARIOS IS
       p_index		        	  IN   VARCHAR2,
 	  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
   );
+  PROCEDURE insertarEmpleado
+  (
+	  p_FIRST_NAME               IN   EMPLOYEES.FIRST_NAME%type,
+	  p_LAST_NAME                IN   EMPLOYEES.LAST_NAME%type,
+	  p_HIRE_DATE                IN   EMPLOYEES.HIRE_DATE%type,
+	  p_FECHA_NACIMIENTO         IN   EMPLOYEES.FECHA_NACIMIENTO%type,
+	  p_SALARY                   IN   EMPLOYEES.SALARY%type
+	  
+  );
     -- ------------------------------------------------------------
 
 END US_QUSUARIOS;
@@ -63,17 +72,30 @@ prompt
 
 create or replace PACKAGE BODY    US_QUSUARIOS IS
 
+	PROCEDURE insertarEmpleado
+	  (
+		   p_FIRST_NAME               IN   EMPLOYEES.FIRST_NAME%type,
+		   p_LAST_NAME                IN   EMPLOYEES.LAST_NAME%type,
+		   p_HIRE_DATE                IN   EMPLOYEES.HIRE_DATE%type,
+		   p_FECHA_NACIMIENTO         IN   EMPLOYEES.FECHA_NACIMIENTO%type,
+		   p_SALARY                   IN   EMPLOYEES.SALARY%type
+	  )IS
+        v_contador number;
+        BEGIN
 
-    --
-    -- #VERSION:0000001000
-    --
+		v_contador := ID_ECONTADOR.NextVal;
 
-    -- ===========================================================
-    -- PROCEDURE consultarRolUsuariousuario
-    -- -----------------------------------------------------------
-    -- Servicio especializado para hacer la consultar del rol dado
-    -- un usuario registrado en el sistema pacrim
-    -- ===========================================================
+		INSERT INTO EMPLOYEES(EMPLOYEE_ID,FIRST_NAME,LAST_NAME,HIRE_DATE,FECHA_NACIMIENTO,SALARY)
+			   VALUES(v_contador,p_FIRST_NAME,p_LAST_NAME,p_HIRE_DATE,p_FECHA_NACIMIENTO,p_SALARY);
+
+		EXCEPTION
+			WHEN OTHERS THEN
+
+			 DBMS_OUTPUT.PUT_LINE(sqlerrm);
+
+		END insertarEmpleado;
+
+
 	PROCEDURE indexNombre
 	  (
 		  p_index		        	  IN   VARCHAR2,
@@ -229,6 +251,8 @@ create or replace PACKAGE BODY    US_QUSUARIOS IS
 			v_meses := v_meses*30;
 
 			v_dias_ope := v_dias + v_meses + v_anos;
+			
+			DBMS_OUTPUT.PUT_LINE('Total Dias : '||v_dias_ope);
 
 			v_dias_ope := v_dias_ope/365;
 			p_antiguedad_anos  := TRUNC(v_dias_ope);
@@ -237,8 +261,9 @@ create or replace PACKAGE BODY    US_QUSUARIOS IS
 			p_antiguedad_meses := TRUNC(v_dias_ope);
 
 			v_dias_ope := (v_dias_ope - p_antiguedad_meses)*30;
-			p_antiguedad_dias  := TRUNC(v_dias_ope);
-            DBMS_OUTPUT.PUT_LINE('AÃƒÂ±os : '||p_antiguedad_anos);
+			p_antiguedad_dias  := (TRUNC(v_dias_ope)+2);
+			
+            DBMS_OUTPUT.PUT_LINE('Anos : '||p_antiguedad_anos);
             DBMS_OUTPUT.PUT_LINE('Meses : '||p_antiguedad_meses);
             DBMS_OUTPUT.PUT_LINE('Dias : '||p_antiguedad_dias);
             p_cod_rta  := 'OK';
