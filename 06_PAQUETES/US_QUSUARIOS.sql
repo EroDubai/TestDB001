@@ -1,12 +1,12 @@
 prompt
 prompt PACKAGE: US_QUSUARIOS
 prompt
-CREATE OR REPLACE PACKAGE HR.US_QUSUARIOS IS
+create or replace PACKAGE    US_QUSUARIOS IS
     --
     -- ===========================================================
     -- US_QUSUARIOS
     -- -----------------------------------------------------------
-    -- Re�ne funciones y procedimientos relacionados con la
+    -- Reï¿½ne funciones y procedimientos relacionados con la
     -- gestion de Usuarios. Paquete especializado de negocio
     -- ===========================================================
     --
@@ -14,7 +14,7 @@ CREATE OR REPLACE PACKAGE HR.US_QUSUARIOS IS
     --
     -- HISTORIAL DE CAMBIOS
     --
-    -- Versi�n        GAP                Solicitud        Fecha        Realiz�            Descripci�n
+    -- Versiï¿½n        GAP                Solicitud        Fecha        Realizï¿½            Descripciï¿½n
     -- -----------    -------------    -------------    ----------    -------------    ------------------------------------------------------------------------------------------------------------------------------------------
     -- 1000                                             03/03/2018      ownk           Se crean API de servicios para el modulo de Gestion Usuario Pacrim
     -- -----------    -------------    -------------    ----------    -------------    ------------------------------------------------------------------------------------------------------------------------------------------
@@ -33,7 +33,23 @@ CREATE OR REPLACE PACKAGE HR.US_QUSUARIOS IS
       p_id_usuario              IN   EMPLOYEES.EMPLOYEE_ID%type,
       p_antiguedad_anos         OUT  NUMBER,
       p_antiguedad_meses        OUT  NUMBER,
-      p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
+	  p_antiguedad_dias         OUT  NUMBER,
+      p_cod_rta          	  	OUT  NE_TCRTA.CRTA_CRTA%type
+  );
+  PROCEDURE obtenerListadoSalarios
+  (
+      p_salarios_empleados        IN   NUMBER,
+	  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
+  );
+  PROCEDURE mayoresAnos
+  (
+      p_edad		        	  IN   NUMBER,
+	  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
+  );
+  PROCEDURE indexNombre
+  (
+      p_index		        	  IN   VARCHAR2,
+	  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
   );
     -- ------------------------------------------------------------
 
@@ -42,7 +58,7 @@ END US_QUSUARIOS;
 
 
 prompt
-prompt PACKAGE BODY:US_QUSUARIOS
+prompt PACKAGE BODY:US_QAUSUARIO
 prompt
 
 create or replace PACKAGE BODY    US_QUSUARIOS IS
@@ -58,34 +74,139 @@ create or replace PACKAGE BODY    US_QUSUARIOS IS
     -- Servicio especializado para hacer la consultar del rol dado
     -- un usuario registrado en el sistema pacrim
     -- ===========================================================
-    PROCEDURE obtenerAntiguedad
+	PROCEDURE indexNombre
+	  (
+		  p_index		        	  IN   VARCHAR2,
+		  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
+	  )IS
+		cursor c_empleados is
+			SELECT 
+				FIRST_NAME
+			FROM 
+				HR.EMPLOYEES em 
+			WHERE 
+				em.FIRST_NAME LIKE '%'|| to_char(p_index) ;
+
+		r_empleados c_empleados%rowtype;
+
+        BEGIN
+
+		for r_empleados in c_empleados loop
+                DBMS_OUTPUT.PUT_LINE('Nombre : '|| r_empleados.FIRST_NAME);
+        end loop;
+
+
+		EXCEPTION
+			WHEN OTHERS THEN
+
+			 DBMS_OUTPUT.PUT_LINE(sqlerrm);
+
+		END indexNombre;
+
+	PROCEDURE mayoresAnos
+	  (
+		  p_edad		        	  IN   NUMBER,
+		  p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
+	  )IS
+
+	 cursor c_empleado is
+		SELECT
+            FIRST_NAME,
+			TO_NUMBER(to_char(FECHA_NACIMIENTO,'yyyy')) AS anos,
+			TO_NUMBER(to_char(FECHA_NACIMIENTO,'mm')) AS mes,
+			TO_NUMBER(to_char(FECHA_NACIMIENTO,'dd')) AS dias
+		FROM
+			HR.EMPLOYEES;
+
+      cursor c_fecha is
+      SELECT
+         TO_NUMBER(to_char(sysdate,'yyyy')) AS anos,
+         TO_NUMBER(to_char(sysdate,'mm')) AS mes,
+		 TO_NUMBER(to_char(sysdate,'dd')) AS dias
+      FROM
+            HR.EMPLOYEES;
+
+       r_empleado     c_empleado%rowtype;
+       r_fecha 		  c_fecha%rowtype;
+	   v_dias_ope	  FLOAT;
+	   v_anos	 	  NUMBER;
+	   v_meses 		  NUMBER;
+	   v_dias 		  NUMBER;
+
+
+        BEGIN
+
+		open c_fecha;
+        fetch c_fecha into r_fecha;
+        close c_fecha;
+
+
+		FOR  r_empleado in c_empleado LOOP
+
+			if(r_empleado.anos is not null) then
+
+				v_anos  := r_fecha.anos - r_empleado.anos;
+				v_meses := r_fecha.mes  - r_empleado.mes;
+				v_dias  := r_fecha.dias - r_empleado.dias;
+
+				v_anos  := v_anos*365;
+				v_meses := v_meses*30;
+
+				v_dias_ope := v_dias + v_meses + v_anos;
+
+				v_dias_ope := v_dias_ope/365;
+				v_anos  := TRUNC(v_dias_ope);
+
+                if(v_anos > p_edad) then
+				DBMS_OUTPUT.PUT_LINE('Nombre : '||r_empleado.FIRST_NAME || '    Anos : '  ||v_anos);
+
+                end if;
+			end if;
+            p_cod_rta  := 'OK';
+		END LOOP;
+
+		EXCEPTION
+			WHEN OTHERS THEN
+
+			 DBMS_OUTPUT.PUT_LINE(sqlerrm);
+
+		END mayoresAnos;
+
+     PROCEDURE obtenerAntiguedad
     (
-        p_id_usuario              IN   EMPLOYEES.EMPLOYEE_ID%type,
+        p_id_usuario              	  IN   EMPLOYEES.EMPLOYEE_ID%type,
     		p_antiguedad_anos         OUT  NUMBER,
             p_antiguedad_meses        OUT  NUMBER,
+			p_antiguedad_dias         OUT  NUMBER,
     		p_cod_rta          	  	  OUT  NE_TCRTA.CRTA_CRTA%type
     )IS
 
       cursor c_usuario is
 			SELECT
                 TO_NUMBER(to_char(HIRE_DATE,'yyyy')) AS anos,
-                TO_NUMBER(to_char(HIRE_DATE,'mm')) AS mes
+                TO_NUMBER(to_char(HIRE_DATE,'mm')) AS mes,
+				TO_NUMBER(to_char(HIRE_DATE,'dd')) AS dias
 			FROM
 				HR.EMPLOYEES em
           WHERE
-            em.EMPLOYEE_ID = p_id_usuario;
+				em.EMPLOYEE_ID = p_id_usuario;
 
       cursor c_fecha is
       SELECT
          TO_NUMBER(to_char(sysdate,'yyyy')) AS anos,
-         TO_NUMBER(to_char(sysdate,'mm')) AS mes
+         TO_NUMBER(to_char(sysdate,'mm')) AS mes,
+		 TO_NUMBER(to_char(sysdate,'dd')) AS dias
       FROM
             HR.EMPLOYEES em
       WHERE
             em.EMPLOYEE_ID = p_id_usuario;
 
        r_usuario_hire c_usuario%rowtype;
-       r_fecha c_fecha%rowtype;
+       r_fecha 		  c_fecha%rowtype;
+	   v_dias_ope	  FLOAT;
+	   v_anos	 	  NUMBER;
+	   v_meses 		  NUMBER;
+	   v_dias 		  NUMBER;
 
     BEGIN
 
@@ -100,14 +221,32 @@ create or replace PACKAGE BODY    US_QUSUARIOS IS
 
         if(r_usuario_hire.anos is not null) then
 
-            p_antiguedad_anos  := r_fecha.anos - r_usuario_hire.anos;
-            p_antiguedad_meses := r_usuario_hire.mes - r_fecha.mes;
+            v_anos  := r_fecha.anos - r_usuario_hire.anos;
+            v_meses := r_fecha.mes  - r_usuario_hire.mes;
+			v_dias  := r_fecha.dias - r_usuario_hire.dias;
 
+			v_anos  := v_anos*365;
+			v_meses := v_meses*30;
+
+			v_dias_ope := v_dias + v_meses + v_anos;
+
+			v_dias_ope := v_dias_ope/365;
+			p_antiguedad_anos  := TRUNC(v_dias_ope);
+
+			v_dias_ope := (v_dias_ope - p_antiguedad_anos)*12;
+			p_antiguedad_meses := TRUNC(v_dias_ope);
+
+			v_dias_ope := (v_dias_ope - p_antiguedad_meses)*30;
+			p_antiguedad_dias  := TRUNC(v_dias_ope);
+            DBMS_OUTPUT.PUT_LINE('AÃƒÂ±os : '||p_antiguedad_anos);
+            DBMS_OUTPUT.PUT_LINE('Meses : '||p_antiguedad_meses);
+            DBMS_OUTPUT.PUT_LINE('Dias : '||p_antiguedad_dias);
             p_cod_rta  := 'OK';
 
         else
             p_antiguedad_anos := null;
             p_antiguedad_meses := null;
+			p_antiguedad_dias := null;
             p_cod_rta  := 'ER_EMP_NUL';
         end if;
     EXCEPTION
@@ -117,6 +256,41 @@ create or replace PACKAGE BODY    US_QUSUARIOS IS
 
     END obtenerAntiguedad;
 
+	PROCEDURE obtenerListadoSalarios
+	  (
+		  p_salarios_empleados        IN   NUMBER,
+		  p_cod_rta          	  	OUT  NE_TCRTA.CRTA_CRTA%type
+	  )IS
+		cursor c_empleados is
+			SELECT 
+				*
+			FROM 
+				HR.EMPLOYEES em 
+			WHERE 
+				em.SALARY > (700000*p_salarios_empleados);
+
+		r_empleados c_empleados%rowtype;
+
+        BEGIN
+
+            for r_empleados in c_empleados loop
+				if(r_empleados.SALARY is not null) then
+					DBMS_OUTPUT.PUT_LINE('Nombre : '|| r_empleados.FIRST_NAME || '	Salario : '|| r_empleados.SALARY);
+					p_cod_rta  := 'OK';
+				else
+					p_cod_rta  := 'FALLO';
+				end if;
+            end loop;
+
+
+
+		EXCEPTION
+			WHEN OTHERS THEN
+
+			 DBMS_OUTPUT.PUT_LINE(sqlerrm);
+
+		END obtenerListadoSalarios;
 
 END US_QUSUARIOS;
 /
+

@@ -1,1 +1,0 @@
-create or replace type FS_PCRM_US.EM_TT_EMTP is table of FS_PCRM_US.EM_TO_EMTP;

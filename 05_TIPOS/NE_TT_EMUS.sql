@@ -1,1 +1,0 @@
-create or replace type FS_PCRM_US.NE_TT_EMUS is table of FS_PCRM_US.NE_TO_EMUS;
