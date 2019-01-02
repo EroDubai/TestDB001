@@ -1,3 +1,4 @@
 # testdb
 
-Prueba de concepto con Oracle PL
+Template para desarrollos en pl con oracle y postgres
+
