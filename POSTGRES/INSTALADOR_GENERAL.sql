@@ -7,7 +7,7 @@
 -- *  PARA EFECTOS DE VERIFICACION DEL CAMBIO                       *
 -- *                                                                *
 -- *                                                                *
--- *                     ADA S.A.S.                                *
+-- *                     ADA Inc                                *
 -- *                                                                *
 -- *                                                                *
 -- ******************************************************************
@@ -28,7 +28,7 @@
 
 
 -- Si la ejecución del script no presenta ningún problema por favor haga
--- COMMIT, de lo contrario haga ROLLBACK y comuniquese con ADA S.A.S.
+-- COMMIT, de lo contrario haga ROLLBACK y comuniquese con ADA Inc
 --
 -- ********************  NOTA IMPORTANTE!!!!  ***********************
 -- *                                                                *

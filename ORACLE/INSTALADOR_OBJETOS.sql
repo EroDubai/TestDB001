@@ -11,7 +11,7 @@ PROMPT *  POR FAVOR ENVIAR LOS LOGS DE EJECUCION DE ESTE SCRIPT (.LST)  *
 PROMPT *  PARA EFECTOS DE VERIFICACION DEL CAMBIO                       *
 PROMPT *                                                                *
 PROMPT *                                                                *
-PROMPT *                     ADA S.A.S.                                *
+PROMPT *                     ADA Inc                                *
 PROMPT *                                                                *
 PROMPT *                                                                *
 PROMPT ******************************************************************
@@ -36,7 +36,7 @@ SET FEEDBACK ON
 SET PAGES 200
 
 PROMPT Si la ejecuci�n del script no presenta ning�n problema por favor haga 
-PROMPT COMMIT, de lo contrario haga ROLLBACK y comuniquese con ADA S.A.S.
+PROMPT COMMIT, de lo contrario haga ROLLBACK y comuniquese con ADA Inc
 PROMPT
 
 
