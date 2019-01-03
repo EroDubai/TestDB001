@@ -1,0 +1,39 @@
+/* ---------------------------------------------------- */
+/*  SU GARANTIA PERSONAL - ADA                         */
+/* ---------------------------------------------------- */
+PROMPT GE_TCDER.sql...
+@@GE_TCDER.sql
+
+PROMPT GE_TCONFIG.sql...
+@@GE_TCONFIG.sql
+
+PROMPT GE_TCRTA.sql...
+@@GE_TCRTA.sql
+
+PROMPT GE_TLGTR.sql...
+@@GE_TLGTR.sql
+
+PROMPT GE_TDLGTR.sql...
+@@GE_TDLGTR.sql
+
+PROMPT GE_TPRCS.sql...
+@@GE_TPRCS.sql
+
+PROMPT GE_TTDOC.sql...
+@@GE_TTDOC.sql
+
+PROMPT GE_TTPER.sql...
+@@GE_TTPER.sql
+
+PROMPT GE_TPAIS.sql...
+@@GE_TPAIS.sql
+
+PROMPT GE_TDEPTO.sql...
+@@GE_TDEPTO.sql
+
+PROMPT GE_TCIUD.sql...
+@@GE_TCIUD.sql
+
+PROMPT GE_TLOGT.sql...
+@@GE_TLOGT.sql
+

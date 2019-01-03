@@ -1,0 +1,43 @@
+/* ---------------------------------------------------- */
+/*  SU GARANTIA PERSONAL - ADA                         */
+/* ---------------------------------------------------- */
+PROMPT AUT_TMENU.sql...
+@@AUT_TMENU.sql
+
+PROMPT AUT_TMNSRV.sql...
+@@AUT_TMNSRV.sql
+
+PROMPT AUT_TMODUL.sql...
+@@AUT_TMODUL.sql
+
+PROMPT AUT_TROL.sql...
+@@AUT_TROL.sql
+
+PROMPT AUT_TRSIN.sql...
+@@AUT_TRSIN.sql
+
+PROMPT AUT_TSERVC.sql...
+@@AUT_TSERVC.sql
+
+PROMPT AUT_TSROL.sql...
+@@AUT_TSROL.sql
+
+PROMPT AUT_TSURL.sql...
+@@AUT_TSURL.sql
+
+PROMPT AUT_TUROL.sql...
+@@AUT_TUROL.sql
+
+PROMPT AUT_TUSUARIO.sql...
+@@AUT_TUSUARIO.sql
+
+PROMPT AUT_TTOKEN.sql...
+@@AUT_TTOKEN.sql
+
+PROMPT AUT_TINLOG.sql...
+@@AUT_TINLOG.sql
+
+PROMPT AUT_TPERSN.sql...
+@@AUT_TPERSN.sql
+
+
